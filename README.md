@@ -32,11 +32,30 @@ Estando dentro del directorio podemos proceder a desplegar toda la arquitectura 
 
 - Estando dentro del servicio IAM de AWS vamos a configurar dos roles: (media-convert-role, transcode-video), el primero es para el servicio AWS MediaConvert y el segundo es para la lambda.
 
-- A (transcode-video) le agregamos dos politicas [AmazonS3FullAccess, AmazonAPIGatewayInvokeFullAccess] para que el servicio AWS MediaConvert pueda acceder a los bucket S3.
+- A (media-convert-role) le agregamos dos politicas [AmazonS3FullAccess, AmazonAPIGatewayInvokeFullAccess] para que el servicio AWS MediaConvert pueda acceder a los bucket S3.
 
 - A (transcode-video) le agreamos dos politicas [AWSElementalMediaConvertFullAccess, AWSLambdaExecute] para que pueda consumir el servicio AWS MediaConvert y permisos de ejecución de la lambda.
 
 Luego de esto usted necesitara tener su maquina configurar para que se pueda conectar a AWS, si no la tiene puede revisar esta documentación de AWS que lo explica correctamente [https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html], lo unico aqui a recordar que el usuario que vaya a configurar en su maquina local tenga permisos de administrador [AdministratorAccess] para que no vaya a tener problemas al desplegar la aquitectura.
 
-- Un ultimo paso para poder desplegar todo en setear correctamente el archivo serverless.yml.
+- Un ultimo paso para poder desplegar todo en setear correctamente el archivo serverless.yml con los roles que creo
 
+Este arquivo tiene varias propiedades que tiene que adaptar a su cuenta, 
+
+- [upload-bucket:] Debe definir un nombre unico para su bucket en entrada que no exista globalmente. "Agregar le nombre solo en el serverless.yml".
+- [transcode-bucket:] Debe crear un bucket a mano para la salida de los video en AWS MediaConvert en AWS S3.
+- [transcode-video-role:] Debe colocar el ARN del rol que creo anteriomente (transcode-video).
+- [media-role:] Debe colocar el ARN del rol que creo anteriomente (media-convert-role).
+- [media-endpoint:] Debe colocar la url de su servicio AWS MediaConvert, esto es unico para las cuentas de AWS y lo puedes encontar en la sección de [Account] del servicio anteriormente mencionado, a la izquierda en el menu hamburguesa.
+
+Y listo, esto seria todo para poder desplegar el backend para la conversion de video, ahora solo queda ejecutar el comando y epserar que todo vaya bien.
+
+> serverless deploy
+
+Este comando le permite desplegar el backend a su cuenta de AWS, si todo le fue bien, haga una prueba, vaya al bucket y cargue el video que esta en la carpeta de resource, cuando lo haga deberia ver tres (3) video en el bucket de salida con diferentes resoluciones etc.
+
+Si desea eliminar los recursos que acaba de desplegar solo debe ejecutar el siguiente comando:
+
+> serverless remove
+
+Y eso seria todo.
