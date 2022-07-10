@@ -1,0 +1,27 @@
+service: videoconvert-in-serverless-lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+custom:
+  upload-bucket: serveless-video-upload2
+  transcode-bucket: serverless-videotranscoded #Este bucket S3 debe crearlo a mano.
+  transcode-video-role: arn:aws:iam::765249025748:role/transcode-video
+  media-endpoint: https://q25wbt2lc.mediaconvert.us-east-1.amazonaws.com #Debe colocar la url de su servicio (AWS MediaConvert).
+  media-role: arn:aws:iam::765249025748:role/media-convert-role
+
+functions:
+  transcode-video:
+    handler: transcode-video/index.handler
+    role: ${self:custom.transcode-video-role}
+    package:
+      individually: true
+    environment:
+      MEDIA_ENDPOINT: ${self:custom.media-endpoint}
+      MEDIA_ROLE: ${self:custom.media-role}
+      TRANSCODED_VIDEO_BUCKET: ${self:custom.transcode-bucket}
+    events:
+      - s3: ${self:custom.upload-bucket}
