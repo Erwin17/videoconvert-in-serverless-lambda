@@ -32,6 +32,11 @@ Estando dentro del directorio podemos proceder a desplegar toda la arquitectura 
 
 - Estando dentro del servicio IAM de AWS vamos a configurar dos roles: (media-convert-role, transcode-video), el primero es para el servicio AWS MediaConvert y el segundo es para la lambda.
 
-- A (transcode-video) le agregamos dos politicas [AmazonS3FullAccess, AmazonAPIGatewayInvokeFullAccess].
+- A (transcode-video) le agregamos dos politicas [AmazonS3FullAccess, AmazonAPIGatewayInvokeFullAccess] para que el servicio AWS MediaConvert pueda acceder a los bucket S3.
 
-- A (transcode-video) le agreamos dos politicas [AWSElementalMediaConvertFullAccess, AWSLambdaExecute].
+- A (transcode-video) le agreamos dos politicas [AWSElementalMediaConvertFullAccess, AWSLambdaExecute] para que pueda consumir el servicio AWS MediaConvert y permisos de ejecución de la lambda.
+
+Luego de esto usted necesitara tener su maquina configurar para que se pueda conectar a AWS, si no la tiene puede revisar esta documentación de AWS que lo explica correctamente [https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html], lo unico aqui a recordar que el usuario que vaya a configurar en su maquina local tenga permisos de administrador [AdministratorAccess] para que no vaya a tener problemas al desplegar la aquitectura.
+
+- Un ultimo paso para poder desplegar todo en setear correctamente el archivo serverless.yml.
+
