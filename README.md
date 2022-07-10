@@ -11,7 +11,7 @@ Cabe aclarar que esta aplicacion esta construida sobre serverless y es altamente
 - A la lambda le llega un evento con información sobre el video que se cargo.
 - Al ejecutarse la lambda, se le envia un job al servicio AWS MediaConvert para que sepa que hacer. 
 - El servicio AWS MediaConvert recibe el job con el tipo de conversión que debe hacer y donde debe dejar los videos con los nuevos formatos, para este caso son tres (3) formatos que vamos a manejar con diferentes resoluciones, tasa de bit, etc.
-- Luego de eso se enviar lso video al bucket de salida, este proceso puede tardar minutos o horas dependiendo de la calidad, duración u otras caracteristicas del video.
+- Luego de eso se enviar los video al bucket de salida, este proceso puede tardar minutos o horas dependiendo de la calidad, duración u otras caracteristicas del video.
 - Al final del flujo se dejan los tres (3) videos en el bucket S3 con las especificaciones que se le indico desde la lambda.
 
 ![](resources/diagram.png)
@@ -26,5 +26,12 @@ Para instalar solo tienes que ejecutar el siguiente comando:
 
 > npm install -g serverless
 
-Ya teniendo servlerless instalado, procede a clonar este repositorio y te ubicas dentro de la carpeta del mismo.
+Ya teniendo serverless instalado, procede a clonar este repositorio y te ubicas dentro de la carpeta del mismo.
 
+Estando dentro del directorio podemos proceder a desplegar toda la arquitectura de nuestros backend pero antes de eso hay que echarle manos a configurar ciertas cosas en el servicio IAM de AWS para que todo funcione correctamente, empecemos:
+
+- Estando dentro del servicio IAM de AWS vamos a configurar dos roles: (media-convert-role, transcode-video), el primero es para el servicio AWS MediaConvert y el segundo es para la lambda.
+
+- A (transcode-video) le agregamos dos politicas [AmazonS3FullAccess, AmazonAPIGatewayInvokeFullAccess].
+
+- A (transcode-video) le agreamos dos politicas [AWSElementalMediaConvertFullAccess, AWSLambdaExecute].
